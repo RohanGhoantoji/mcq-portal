@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Class 11 MCQ Portal</title>
+
+<style>
+
+body
+{
+font-family: Arial;
+background: linear-gradient(to right, #74ebd5, #ACB6E5);
+text-align:center;
+}
+
+.container
+{
+background:white;
+width:60%;
+margin:auto;
+padding:20px;
+margin-top:50px;
+border-radius:10px;
+box-shadow:0px 0px 10px gray;
+}
+
+button
+{
+padding:10px 20px;
+font-size:18px;
+background:#4CAF50;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+margin:10px;
+}
+
+#timer
+{
+font-size:20px;
+color:red;
+}
+
+.correct
+{
+color:green;
+}
+
+.wrong
+{
+color:red;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+<h1>Class 11 MCQ Portal</h1>
+
+<p id="timer">Time: 60</p>
+
+<div id="quiz"></div>
+
+<button onclick="startQuiz()">Start Test</button>
+
+<button onclick="submitQuiz()">Submit</button>
+
+<h2 id="result"></h2>
+
+<div id="review"></div>
+
+</div>
+
+
+
+<script>
+
+var questions = [
+
+{
+question:"CPU is called?",
+options:["Brain","Mouse","Keyboard","Printer"],
+answer:"Brain"
+},
+
+{
+question:"RAM is?",
+options:["Permanent","Temporary","Software","Virus"],
+answer:"Temporary"
+},
+
+{
+question:"HTML is?",
+options:["Language","Hardware","CPU","RAM"],
+answer:"Language"
+}
+
+];
+
+
+
+var time=60;
+var timer;
+
+
+function startQuiz()
+{
+
+loadQuestions();
+
+timer=setInterval(function(){
+
+time--;
+
+document.getElementById("timer").innerHTML="Time: "+time;
+
+if(time==0)
+{
+clearInterval(timer);
+submitQuiz();
+}
+
+},1000);
+
+}
+
+
+
+function loadQuestions()
+{
+
+var quiz=document.getElementById("quiz");
+
+quiz.innerHTML="";
+
+questions.forEach(function(q,index){
+
+quiz.innerHTML+=
+
+"<h3>"+q.question+"</h3>"
+
++
+
+q.options.map(function(option){
+
+return
+
+"<input type='radio' name='q"+index+"' value='"+option+"'>"+option+"<br>"
+
+}).join("");
+
+});
+
+}
+
+
+
+
+function submitQuiz()
+{
+
+clearInterval(timer);
+
+var score=0;
+
+var review="";
+
+
+questions.forEach(function(q,index){
+
+var answer=document.querySelector("input[name='q"+index+"']:checked");
+
+if(answer)
+{
+
+if(answer.value==q.answer)
+{
+
+score++;
+
+review+="<p class='correct'>"+q.question+" — Correct</p>";
+
+}
+
+else
+{
+
+review+="<p class='wrong'>"+q.question+" — Wrong (Correct: "+q.answer+")</p>";
+
+}
+
+}
+
+else
+{
+
+review+="<p class='wrong'>"+q.question+" — Not Answered</p>";
+
+}
+
+});
+
+
+var percent=(score/questions.length)*100;
+
+document.getElementById("result").innerHTML=
+
+"Score: "+score+"/"+questions.length+
+
+"<br>Percentage: "+percent+"%";
+
+
+document.getElementById("review").innerHTML=review;
+
+}
+
+</script>
+
+
+</body>
+
+</html>
