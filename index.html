@@ -1,187 +1,166 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Class 11 Computer Science MCQ Portal</title>
+<title>Class 11 MCQ Portal</title>
 
 <style>
 body{
 font-family:Arial;
-background:linear-gradient(to right,#4facfe,#00f2fe);
+background:#0f172a;
+color:white;
 text-align:center;
+padding:20px;
 }
 
 .container{
-background:white;
-width:75%;
-margin:auto;
-padding:20px;
-margin-top:20px;
+background:#1e293b;
+padding:25px;
 border-radius:10px;
+max-width:700px;
+margin:auto;
 }
 
 button{
 padding:10px 20px;
-font-size:18px;
 margin:10px;
-background:#28a745;
-color:white;
 border:none;
+background:#22c55e;
+color:white;
+font-size:16px;
 border-radius:5px;
 cursor:pointer;
 }
 
-.correct{color:green;}
-.wrong{color:red;}
+.option{
+display:block;
+background:#334155;
+margin:8px;
+padding:10px;
+border-radius:5px;
+cursor:pointer;
+}
 
-#timer{
-font-size:22px;
-color:red;
+.timer{
+font-size:20px;
+color:#facc15;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-
 <h1>Class 11 Computer Science MCQ Portal</h1>
+<div class="timer" id="timer">Time Left: 40:00</div>
 
-<p id="timer">Time Left: 900 sec</p>
-
-<div id="quiz"></div>
-
-<button onclick="startQuiz()">Start Test</button>
-<button onclick="submitQuiz()">Submit</button>
-
-<h2 id="result"></h2>
-<h3 id="timeTaken"></h3>
-
-<div id="review"></div>
-
-</div>
+<div class="container" id="quizBox"></div>
 
 <script>
 
-var questions=[
+const questions=[
 
-{q:"What does CPU stand for?",o:["Central Processing Unit","Central Programming Unit","Computer Personal Unit","Centralized Processing Unit"],a:"Central Processing Unit"},
-
-{q:"Which memory is placed between CPU and primary memory?",o:["Cache Memory","Secondary memory","RAM","ROM"],a:"Cache Memory"},
-
-{q:"Which memory is volatile?",o:["ROM","RAM","SSD","HDD"],a:"RAM"},
-
-{q:"Father of Computer?",o:["William Shakespeare","Isaac Newton","Charles Babbage","None of these"],a:"Charles Babbage"},
-
-{q:"Primary role of Memory Controller?",o:["Manage external storage","Control CPU speed","Regulate power","Manage data flow into and out of main memory"],a:"Manage data flow into and out of main memory"},
-
-{q:"What is a bus?",o:["Software","Physical wire used for data transfer","Storage device","Processor"],a:"Physical wire used for data transfer"},
-
-{q:"First computing device?",o:["Pascaline","Analytical Engine","EDVAC","Abacus"],a:"Abacus"},
-
-{q:"Secondary storage example?",o:["RAM","Hard Disk Drive (HDD)","Cache Memory","Registers"],a:"Hard Disk Drive (HDD)"},
-
-{q:"Technology replacing Vacuum Tubes?",o:["Transistors","Microprocessor","Integrated Circuits","Punch Cards"],a:"Transistors"},
-
-{q:"Key characteristic of secondary memory?",o:["High Speed","Non-Volatile","Small Storage Capacity","Expensive"],a:"Non-Volatile"},
-
-{q:"Bus used to transfer data?",o:["Address bus","Control bus","Data bus","System bus"],a:"Data bus"},
-
-{q:"Bus used to specify memory address?",o:["Control bus","Address bus","System bus","Data bus"],a:"Address bus"},
-
-{q:"Microprocessor is?",o:["CPU on a single microchip","Secondary memory","Intel device","Cache memory"],a:"CPU on a single microchip"},
-
-{q:"IC introduced in which generation?",o:["First generation","Second generation","Third generation","Fourth generation"],a:"Fourth generation"},
-
-{q:"Fifth generation processor?",o:["Intel 8080","Motorola 6800","Intel 80368","Pentium"],a:"Pentium"},
-
-{q:"Software providing core functionality?",o:["System Software","Application Software","Utility Software","Open Source Software"],a:"System Software"},
-
-{q:"Programs like Word Processor belong to?",o:["System Software","Customised Software","General Purpose Software","Embedded Software"],a:"General Purpose Software"},
-
-{q:"Example of FOSS?",o:["Adobe Photoshop","Microsoft Word","Mozilla Firefox","CorelDRAW"],a:"Mozilla Firefox"},
-
-{q:"Primary function of OS?",o:["Manage hardware and software resources","Provide internet security","Develop software","Create graphics"],a:"Manage hardware and software resources"},
-
-{q:"Which is NOT an Operating System?",o:["Windows","Linux","Android","Photoshop"],a:"Photoshop"},
-
-{q:"Multitasking means?",o:["Enhancing graphics","Installing software","Running multiple applications simultaneously","None"],a:"Running multiple applications simultaneously"},
-
-{q:"Primary function of Analytical Engine?",o:["Perform arithmetic calculations","Store punched cards","Control machines","None"],a:"Perform arithmetic calculations"},
-
-{q:"Device transferring data between USB and HDD?",o:["Bus","Processor","Memory Controller","Cache"],a:"Memory Controller"},
-
-{q:"32-bit microprocessor generation?",o:["Fourth generation","First generation","Second generation","Third generation"],a:"Fourth generation"},
-
-{q:"Component managing memory flow?",o:["Memory Controller","CPU","Cache","Bus"],a:"Memory Controller"},
-
-{q:"Example of customised software?",o:["School management software","Web browser","Media player","Word processor"],a:"School management software"},
-
-{q:"Computer cannot function without?",o:["System software","Application software","Utility software","None"],a:"System software"},
-
-{q:"Inventor of Tabulating Machine?",o:["Alan Turing","Charles Babbage","Blaise Pascal","Herman Hollerith"],a:"Herman Hollerith"},
-
-{q:"ROM stands for?",o:["Remote Operations Manager","Random Access Memory","Read Only Memory","Run-Time memory"],a:"Read Only Memory"},
-
-{q:"Function of Application Software?",o:["Perform user specific tasks","Manage hardware","Provide core functionality","Enhance security"],a:"Perform user specific tasks"}
+{q:"CPU stands for?",o:["Central Processing Unit","Central Programming Unit","Computer Personal Unit","Centralized Processing Unit"],a:0},
+{q:"High speed memory between CPU and main memory?",o:["Cache Memory","Secondary Memory","RAM","ROM"],a:0},
+{q:"Volatile temporary memory?",o:["ROM","RAM","SSD","HDD"],a:1},
+{q:"Father of Computer?",o:["William Shakespeare","Isaac Newton","Charles Babbage","None"],a:2},
+{q:"Role of Memory Controller?",o:["Manage storage devices","Control CPU speed","Regulate power","Manage data flow of main memory"],a:3},
+{q:"Bus in computer?",o:["Software","Physical wire for transfer","Storage device","Processor"],a:1},
+{q:"First computing device?",o:["Pascaline","Analytical Engine","EDVAC","Abacus"],a:3},
+{q:"Secondary storage example?",o:["RAM","HDD","Cache","Registers"],a:1},
+{q:"Replaced Vacuum Tubes?",o:["Transistors","Microprocessor","IC","Punch Cards"],a:0},
+{q:"Key feature of secondary memory?",o:["High speed","Non-volatile","Small storage","Expensive"],a:1},
+{q:"Transfers data between components?",o:["Address Bus","Control Bus","Data Bus","System Bus"],a:2},
+{q:"Specifies memory address?",o:["Control Bus","Address Bus","System Bus","Data Bus"],a:1},
+{q:"Microprocessor?",o:["CPU on chip","Secondary memory","Intel device","Cache"],a:0},
+{q:"IC introduced in?",o:["First","Second","Third","Fourth"],a:3},
+{q:"Fifth generation processor?",o:["Intel 8080","Motorola 6800","Intel 80368","Pentium"],a:3},
+{q:"Core functionality software?",o:["System Software","Application","Utility","Open Source"],a:0},
+{q:"Word processors belong to?",o:["System","Custom","General Purpose","Embedded"],a:2},
+{q:"FOSS example?",o:["Photoshop","MS Word","Mozilla Firefox","CorelDRAW"],a:2},
+{q:"OS primary function?",o:["Manage hardware/software","Security","Develop software","Graphics"],a:0},
+{q:"Not an OS?",o:["Windows","Linux","Android","Photoshop"],a:3},
+{q:"Multitasking?",o:["Graphics","Install software","Run multiple apps","None"],a:2},
+{q:"Analytical Engine purpose?",o:["Arithmetic calculation","Store cards","Industrial control","None"],a:0},
+{q:"USB to HDD transfer device?",o:["Bus","Processor","Memory Controller","Cache"],a:2},
+{q:"32-bit generation?",o:["Fourth","First","Second","Third"],a:0},
+{q:"Manages main memory flow?",o:["Memory Controller","CPU","Cache","Bus"],a:0},
+{q:"Customized software example?",o:["School software","Browser","Media player","Word"],a:0},
+{q:"Computer cannot work without?",o:["System Software","Application","Utility","None"],a:0},
+{q:"Tabulating machine inventor?",o:["Alan Turing","Babbage","Pascal","Herman Hollerith"],a:3},
+{q:"ROM stands for?",o:["Remote Manager","Random Memory","Read Only Memory","Run Time"],a:2},
+{q:"Application software function?",o:["User tasks","Manage hardware","Core system","Security"],a:0}
 
 ];
 
-var startTime;
-var time=900;
-var timer;
-
-function startQuiz(){
-startTime=new Date();
-loadQuiz();
-
-timer=setInterval(()=>{
-time--;
-document.getElementById("timer").innerHTML="Time Left: "+time+" sec";
-if(time<=0) submitQuiz();
-},1000);
-}
-
-function loadQuiz(){
-let quiz="";
-questions.forEach((q,i)=>{
-quiz+="<h3>"+(i+1)+". "+q.q+"</h3>";
-q.o.forEach(opt=>{
-quiz+=`<input type="radio" name="q${i}" value="${opt}"> ${opt}<br>`;
-});
-});
-document.getElementById("quiz").innerHTML=quiz;
-}
-
-function submitQuiz(){
-
-clearInterval(timer);
-
+let index=0;
 let score=0;
-let review="";
+let answers=[];
 
-questions.forEach((q,i)=>{
-let ans=document.querySelector(`input[name='q${i}']:checked`);
+function loadQuestion(){
 
-if(ans && ans.value===q.a){
-score++;
-review+=`<p class="correct">Q${i+1}: Correct</p>`;
-}else{
-review+=`<p class="wrong">Q${i+1}: Wrong (Correct: ${q.a})</p>`;
+if(index>=questions.length){
+showResult();
+return;
 }
+
+let q=questions[index];
+
+let html=`<h2>Question ${index+1}</h2>
+<p>${q.q}</p>`;
+
+q.o.forEach((opt,i)=>{
+html+=`<div class="option"
+onclick="selectAnswer(${i})">${opt}</div>`;
 });
 
-let endTime=new Date();
-let seconds=Math.floor((endTime-startTime)/1000);
-
-document.getElementById("result").innerHTML=
-"Score: "+score+"/"+questions.length+
-"<br>Percentage: "+((score/questions.length)*100).toFixed(2)+"%";
-
-document.getElementById("timeTaken").innerHTML=
-"Time Taken: "+seconds+" seconds";
-
-document.getElementById("review").innerHTML=review;
+document.getElementById("quizBox").innerHTML=html;
 }
+
+function selectAnswer(choice){
+
+answers.push(choice);
+
+if(choice===questions[index].a)
+score++;
+
+index++;
+loadQuestion();
+}
+
+function showResult(){
+
+let review="<h2>Result</h2>";
+review+=`<h3>Your Score: ${score}/30</h3>`;
+
+questions.forEach((q,i)=>{
+let correct=q.a;
+let user=answers[i];
+
+review+=`<p>
+Q${i+1}: ${q.q}<br>
+Your Answer: ${q.o[user]||"Not Answered"}<br>
+Correct Answer: ${q.o[correct]}
+${user===correct?" ✅":" ❌"}
+</p><hr>`;
+});
+
+document.getElementById("quizBox").innerHTML=review;
+}
+
+let time=2400;
+
+setInterval(()=>{
+let min=Math.floor(time/60);
+let sec=time%60;
+document.getElementById("timer").innerText=
+`Time Left: ${min}:${sec<10?"0":""}${sec}`;
+time--;
+
+if(time<0){
+showResult();
+}
+},1000);
+
+loadQuestion();
 
 </script>
 
