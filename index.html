@@ -1,222 +1,160 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
-<title>Class 11 MCQ Portal</title>
+<title>Class 11 Computer Science MCQ Portal</title>
 
 <style>
 
-body
-{
-font-family: Arial;
-background: linear-gradient(to right, #74ebd5, #ACB6E5);
+body{
+font-family:Arial;
+background:linear-gradient(to right,#667eea,#764ba2);
+color:white;
 text-align:center;
 }
 
-.container
-{
+.container{
 background:white;
-width:60%;
+color:black;
+width:70%;
 margin:auto;
 padding:20px;
-margin-top:50px;
+margin-top:30px;
 border-radius:10px;
-box-shadow:0px 0px 10px gray;
 }
 
-button
-{
+button{
 padding:10px 20px;
 font-size:18px;
+margin:10px;
 background:#4CAF50;
 color:white;
 border:none;
 border-radius:5px;
 cursor:pointer;
-margin:10px;
 }
 
-#timer
-{
-font-size:20px;
-color:red;
-}
+.correct{color:green;}
+.wrong{color:red;}
 
-.correct
-{
-color:green;
-}
-
-.wrong
-{
+#timer{
+font-size:22px;
 color:red;
 }
 
 </style>
-
 </head>
-
 
 <body>
 
-
 <div class="container">
 
-<h1>Class 11 MCQ Portal</h1>
+<h1>Class 11 Computer Science MCQ Portal</h1>
 
-<p id="timer">Time: 60</p>
+<p id="timer">Time Left: 600 sec</p>
 
 <div id="quiz"></div>
 
 <button onclick="startQuiz()">Start Test</button>
-
 <button onclick="submitQuiz()">Submit</button>
 
 <h2 id="result"></h2>
+<h3 id="timeTaken"></h3>
 
 <div id="review"></div>
 
 </div>
 
-
-
 <script>
 
-var questions = [
+var questions=[
 
-{
-question:"CPU is called?",
-options:["Brain","Mouse","Keyboard","Printer"],
-answer:"Brain"
-},
-
-{
-question:"RAM is?",
-options:["Permanent","Temporary","Software","Virus"],
-answer:"Temporary"
-},
-
-{
-question:"HTML is?",
-options:["Language","Hardware","CPU","RAM"],
-answer:"Language"
-}
+{q:"CPU stands for?",o:["Central Processing Unit","Central Programming Unit","Computer Personal Unit","Centralized Processing Unit"],a:"Central Processing Unit"},
+{q:"High speed memory between CPU and main memory?",o:["Cache Memory","Secondary memory","RAM","ROM"],a:"Cache Memory"},
+{q:"Volatile memory?",o:["ROM","RAM","SSD","HDD"],a:"RAM"},
+{q:"Father of Computer?",o:["William Shakespeare","Isaac Newton","Charles Babbage","None"],a:"Charles Babbage"},
+{q:"Role of Memory Controller?",o:["Manage external storage","Control CPU speed","Regulate power","Manage data flow into and out of main memory"],a:"Manage data flow into and out of main memory"},
+{q:"Bus means?",o:["Software","Physical wire used for data transfer","Storage device","Processor"],a:"Physical wire used for data transfer"},
+{q:"First computing device?",o:["Pascaline","Analytical Engine","EDVAC","Abacus"],a:"Abacus"},
+{q:"Secondary storage?",o:["RAM","Hard Disk Drive(HDD)","Cache","Registers"],a:"Hard Disk Drive(HDD)"},
+{q:"Technology replacing vacuum tubes?",o:["Transistors","Microprocessor","Integrated Circuits","Punch Cards"],a:"Transistors"},
+{q:"Secondary memory characteristic?",o:["High Speed","Non-Volatile","Small Storage","Expensive"],a:"Non-Volatile"},
+{q:"Bus transferring data?",o:["Address bus","Control bus","Data bus","System bus"],a:"Data bus"},
+{q:"Bus specifying address?",o:["Control bus","Address bus","System bus","Data bus"],a:"Address bus"},
+{q:"Microprocessor?",o:["CPU on single chip","Secondary memory","Intel device","Cache"],a:"CPU on single chip"},
+{q:"IC introduced generation?",o:["First","Second","Third","Fourth"],a:"Fourth"},
+{q:"Fifth generation processor?",o:["Intel 8080","Motorola 6800","Intel 80368","Pentium"],a:"Pentium"},
+{q:"Core functionality software?",o:["System Software","Application Software","Utility Software","Open Source"],a:"System Software"},
+{q:"Word processors belong to?",o:["System","Customised","General Purpose","Embedded"],a:"General Purpose"},
+{q:"FOSS example?",o:["Photoshop","MS Word","Mozilla Firefox","CorelDRAW"],a:"Mozilla Firefox"},
+{q:"Operating System function?",o:["Manage hardware & software","Internet security","Develop software","Create graphics"],a:"Manage hardware & software"},
+{q:"Not an OS?",o:["Windows","Linux","Android","Photoshop"],a:"Photoshop"},
+{q:"Multitasking?",o:["Enhance graphics","Install software","Run multiple apps","None"],a:"Run multiple apps"},
+{q:"Analytical Engine function?",o:["Arithmetic calculations","Store punched cards","Control machines","None"],a:"Arithmetic calculations"},
+{q:"USB to HDD transfer device?",o:["Bus","Processor","Memory Controller","Cache"],a:"Memory Controller"},
+{q:"32-bit generation?",o:["Fourth","First","Second","Third"],a:"Fourth"},
+{q:"Manages memory flow?",o:["Memory Controller","CPU","Cache","Bus"],a:"Memory Controller"},
+{q:"Customised software?",o:["School management software","Browser","Media player","Word processor"],a:"School management software"},
+{q:"Computer cannot function without?",o:["System software","Application software","Utility software","None"],a:"System software"},
+{q:"Invented tabulating machine?",o:["Alan Turing","Charles Babbage","Blaise Pascal","Herman Hollerith"],a:"Herman Hollerith"},
+{q:"ROM stands for?",o:["Remote Operations Manager","Random Access Memory","Read Only Memory","Run Time Memory"],a:"Read Only Memory"},
+{q:"Application software function?",o:["User specific task","Manage hardware","Core system","Security"],a:"User specific task"}
 
 ];
 
-
-
-var time=60;
+var startTime;
+var time=600;
 var timer;
 
+function startQuiz(){
+startTime=new Date();
 
-function startQuiz()
-{
+loadQuiz();
 
-loadQuestions();
-
-timer=setInterval(function(){
-
+timer=setInterval(()=>{
 time--;
-
-document.getElementById("timer").innerHTML="Time: "+time;
-
-if(time==0)
-{
-clearInterval(timer);
-submitQuiz();
-}
-
+document.getElementById("timer").innerHTML="Time Left: "+time+" sec";
+if(time==0){submitQuiz();}
 },1000);
-
 }
 
-
-
-function loadQuestions()
-{
-
-var quiz=document.getElementById("quiz");
-
-quiz.innerHTML="";
-
-questions.forEach(function(q,index){
-
-quiz.innerHTML+=
-
-"<h3>"+q.question+"</h3>"
-
-+
-
-q.options.map(function(option){
-
-return
-
-"<input type='radio' name='q"+index+"' value='"+option+"'>"+option+"<br>"
-
-}).join("");
-
+function loadQuiz(){
+let quiz="";
+questions.forEach((q,i)=>{
+quiz+="<h3>"+(i+1)+". "+q.q+"</h3>";
+q.o.forEach(opt=>{
+quiz+=`<input type='radio' name='q${i}' value='${opt}'> ${opt}<br>`;
 });
-
+});
+document.getElementById("quiz").innerHTML=quiz;
 }
 
-
-
-
-function submitQuiz()
-{
+function submitQuiz(){
 
 clearInterval(timer);
 
-var score=0;
+let score=0;
+let review="";
 
-var review="";
+questions.forEach((q,i)=>{
+let ans=document.querySelector(`input[name='q${i}']:checked`);
 
-
-questions.forEach(function(q,index){
-
-var answer=document.querySelector("input[name='q"+index+"']:checked");
-
-if(answer)
-{
-
-if(answer.value==q.answer)
-{
-
+if(ans && ans.value==q.a){
 score++;
-
-review+="<p class='correct'>"+q.question+" — Correct</p>";
-
+review+=`<p class='correct'>Q${i+1} Correct</p>`;
+}else{
+review+=`<p class='wrong'>Q${i+1} Wrong (Correct: ${q.a})</p>`;
 }
-
-else
-{
-
-review+="<p class='wrong'>"+q.question+" — Wrong (Correct: "+q.answer+")</p>";
-
-}
-
-}
-
-else
-{
-
-review+="<p class='wrong'>"+q.question+" — Not Answered</p>";
-
-}
-
 });
 
-
-var percent=(score/questions.length)*100;
+let endTime=new Date();
+let seconds=Math.floor((endTime-startTime)/1000);
 
 document.getElementById("result").innerHTML=
-
 "Score: "+score+"/"+questions.length+
+"<br>Percentage: "+((score/questions.length)*100).toFixed(2)+"%";
 
-"<br>Percentage: "+percent+"%";
-
+document.getElementById("timeTaken").innerHTML=
+"Time Taken: "+seconds+" seconds";
 
 document.getElementById("review").innerHTML=review;
 
@@ -224,7 +162,5 @@ document.getElementById("review").innerHTML=review;
 
 </script>
 
-
 </body>
-
 </html>
