@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Class 11 CS MCQ Portal</title>
+<title>MCQ Portal</title>
 
 <style>
 body{
@@ -12,63 +12,75 @@ text-align:center;
 margin:0;
 }
 
-.screen{display:none;padding:20px;}
-.active{display:block;}
-
 .container{
-background:#1e293b;
-max-width:800px;
+max-width:700px;
 margin:auto;
 padding:20px;
-border-radius:10px;
 }
 
 button{
 padding:12px 20px;
 margin:10px;
 font-size:16px;
-background:#22c55e;
 border:none;
-color:white;
-border-radius:6px;
+border-radius:8px;
 cursor:pointer;
+background:#22c55e;
+color:white;
 }
 
 .option{
-background:#334155;
-margin:8px;
-padding:10px;
-border-radius:6px;
+display:block;
+background:#1e293b;
+margin:10px;
+padding:12px;
+border-radius:8px;
 cursor:pointer;
 }
 
 .timer{
-color:#facc15;
 font-size:20px;
-margin:10px;
+color:#facc15;
+}
+
+.hidden{
+display:none;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HOME -->
-<div id="home" class="screen active">
 <div class="container">
-<h1>📘 Class 11 CS MCQ Portal</h1>
+
+<h1>📘 MCQ Learning Portal</h1>
+
+<div id="home">
 <h2>Select Chapter</h2>
 
-<button onclick="startQuiz(ch1)">Chapter 1 - Computer System</button>
-<button onclick="startQuiz(ch2)">Chapter 2 - Number System</button>
-<button onclick="startQuiz(ch3)">Chapter 3 - Emerging Trends</button>
+<button onclick="startQuiz(1)">
+Encoding Schemes & Number System
+</button>
 
-</div>
+<button onclick="startQuiz(2)">
+Emerging Trends
+</button>
 </div>
 
-<!-- QUIZ -->
-<div id="quizScreen" class="screen">
+<div id="quiz" class="hidden">
 <div class="timer" id="timer"></div>
-<div class="container" id="quizBox"></div>
+<h2 id="question"></h2>
+<div id="options"></div>
+<button onclick="nextQuestion()">Submit</button>
+</div>
+
+<div id="result" class="hidden">
+<h2>✅ Quiz Completed</h2>
+<p id="score"></p>
+<p id="timeTaken"></p>
+<button onclick="location.reload()">Home</button>
+</div>
+
 </div>
 
 <script>
@@ -76,120 +88,110 @@ margin:10px;
 let questions=[];
 let index=0;
 let score=0;
-let answers=[];
+let selected=null;
+let startTime;
 let timerInterval;
 
-/* ---------- CHAPTER 1 ---------- */
-const ch1=[
-{q:"CPU stands for?",o:["Central Processing Unit","Central Programming Unit","Computer Personal Unit","Centralized Processing Unit"],a:0},
-{q:"High speed memory between CPU and main memory?",o:["Cache Memory","Secondary Memory","RAM","ROM"],a:0},
-{q:"Volatile temporary memory?",o:["ROM","RAM","SSD","HDD"],a:1},
-{q:"Father of Computer?",o:["William Shakespeare","Isaac Newton","Charles Babbage","None"],a:2},
-{q:"Primary role of Memory Controller?",o:["Manage storage","Control CPU","Regulate power","Manage data flow"],a:3}
-];
-
-/* ---------- CHAPTER 2 ---------- */
-const ch2=[
-{q:"Number system using two symbols?",o:["Decimal","Binary","Octal","Hexadecimal"],a:1},
+const chapter1=[
+{q:"Which number system uses only two symbols?",o:["Decimal","Binary","Octal","Hexadecimal"],a:1},
 {q:"Radix of Octal system?",o:["2","8","10","16"],a:1},
-{q:"Bits in one byte?",o:["4","8","16","32"],a:1},
-{q:"ASCII uses?",o:["6 bits","7 bits","8 bits","16 bits"],a:1},
-{q:"Hexadecimal digit F value?",o:["14","15","16","13"],a:1}
+{q:"Decimal of (11010)₂ ?",o:["24","25","26","27"],a:2},
+{q:"Binary of 45?",o:["101101","110101","100101","111001"],a:0},
+{q:"Bits in one byte?",o:["4","8","16","32"],a:1}
 ];
 
-/* ---------- CHAPTER 3 ---------- */
-const ch3=[
+const chapter2=[
 {q:"AI refers to?",o:["Human intelligence","Machine intelligence","Natural intelligence","Manual processing"],a:1},
 {q:"Example of AI?",o:["Calculator","Voice Assistant","Keyboard","Printer"],a:1},
-{q:"Machine Learning is subset of?",o:["Internet","Artificial Intelligence","Cloud","Robotics"],a:1},
-{q:"IoT stands for?",o:["Internet of Technology","Integration of Things","Internet of Things","Interface of Things"],a:2},
-{q:"Cloud Computing allows users to?",o:["Store locally","Access via Internet","Use hardware only","Disconnect network"],a:1}
+{q:"IoT stands for?",o:["Internet Technology","Internet of Things","Integration Things","Interface Things"],a:1},
+{q:"VR means?",o:["Visual Reality","Virtual Reality","Verified Reality","Variable Reality"],a:1},
+{q:"Cloud computing allows?",o:["Local storage","Internet access resources","Hardware only","Disconnect networks"],a:1}
 ];
 
-function startQuiz(chapter){
+function startQuiz(ch){
+document.getElementById("home").classList.add("hidden");
+document.getElementById("quiz").classList.remove("hidden");
 
-questions=chapter;
-index=0;
-score=0;
-answers=[];
+questions = ch===1 ? chapter1 : chapter2;
 
-document.getElementById("home").classList.remove("active");
-document.getElementById("quizScreen").classList.add("active");
+startTime=new Date();
 
-startTimer();
+timerInterval=setInterval(updateTimer,1000);
+
 loadQuestion();
+}
+
+function updateTimer(){
+let now=new Date();
+let diff=2400-Math.floor((now-startTime)/1000);
+
+let m=Math.floor(diff/60);
+let s=diff%60;
+
+document.getElementById("timer").innerText=
+"Time Left: "+m+":"+s;
+
+if(diff<=0) finishQuiz();
 }
 
 function loadQuestion(){
-
-if(index>=questions.length){
-showResult();
-return;
-}
-
+selected=null;
 let q=questions[index];
+document.getElementById("question").innerText=
+(index+1)+". "+q.q;
 
-let html=`<h2>Question ${index+1}</h2>
-<p>${q.q}</p>`;
-
+let optHTML="";
 q.o.forEach((opt,i)=>{
-html+=`<div class="option"
-onclick="selectAnswer(${i})">${opt}</div>`;
+optHTML+=
+`<div class="option"
+onclick="selectOption(${i},this)">
+${opt}
+</div>`;
 });
 
-document.getElementById("quizBox").innerHTML=html;
+document.getElementById("options").innerHTML=optHTML;
 }
 
-function selectAnswer(choice){
+function selectOption(i,el){
+selected=i;
+document.querySelectorAll(".option")
+.forEach(o=>o.style.background="#1e293b");
 
-answers.push(choice);
+el.style.background="#22c55e";
+}
 
-if(choice===questions[index].a)
+function nextQuestion(){
+
+if(selected===questions[index].a)
 score++;
 
 index++;
+
+if(index<questions.length)
 loadQuestion();
+else
+finishQuiz();
 }
 
-function showResult(){
+function finishQuiz(){
 
 clearInterval(timerInterval);
 
-let review=`<h2>Result</h2>
-<h3>Score: ${score}/${questions.length}</h3>`;
+document.getElementById("quiz")
+.classList.add("hidden");
 
-questions.forEach((q,i)=>{
-review+=`
-<p>
-Q${i+1}: ${q.q}<br>
-Your Answer: ${q.o[answers[i]]||"Not Answered"}<br>
-Correct: ${q.o[q.a]}
-${answers[i]==q.a?" ✅":" ❌"}
-</p><hr>`;
-});
+document.getElementById("result")
+.classList.remove("hidden");
 
-review+=`<button onclick="location.reload()">Back to Home</button>`;
+let end=new Date();
+let time=Math.floor((end-startTime)/1000);
 
-document.getElementById("quizBox").innerHTML=review;
-}
+document.getElementById("score")
+.innerText="Score: "+score+
+" / "+questions.length;
 
-function startTimer(){
-
-let time=2400;
-
-timerInterval=setInterval(()=>{
-let m=Math.floor(time/60);
-let s=time%60;
-
-document.getElementById("timer").innerText=
-"Time Left: "+m+":"+(s<10?"0":"")+s;
-
-time--;
-
-if(time<0){
-showResult();
-}
-},1000);
+document.getElementById("timeTaken")
+.innerText="Time Taken: "+time+" seconds";
 }
 
 </script>
