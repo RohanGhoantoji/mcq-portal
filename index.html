@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Class 11 MCQ Portal</title>
+<title>Class 11 CS MCQ Portal</title>
 
 <style>
 body{
@@ -9,91 +9,116 @@ font-family:Arial;
 background:#0f172a;
 color:white;
 text-align:center;
-padding:20px;
+margin:0;
 }
+
+.screen{display:none;padding:20px;}
+.active{display:block;}
 
 .container{
 background:#1e293b;
-padding:25px;
-border-radius:10px;
-max-width:700px;
+max-width:800px;
 margin:auto;
+padding:20px;
+border-radius:10px;
 }
 
 button{
-padding:10px 20px;
+padding:12px 20px;
 margin:10px;
-border:none;
-background:#22c55e;
-color:white;
 font-size:16px;
-border-radius:5px;
+background:#22c55e;
+border:none;
+color:white;
+border-radius:6px;
 cursor:pointer;
 }
 
 .option{
-display:block;
 background:#334155;
 margin:8px;
 padding:10px;
-border-radius:5px;
+border-radius:6px;
 cursor:pointer;
 }
 
 .timer{
-font-size:20px;
 color:#facc15;
+font-size:20px;
+margin:10px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Class 11 Computer Science MCQ Portal</h1>
-<div class="timer" id="timer">Time Left: 40:00</div>
+<!-- HOME -->
+<div id="home" class="screen active">
+<div class="container">
+<h1>📘 Class 11 CS MCQ Portal</h1>
+<h2>Select Chapter</h2>
 
+<button onclick="startQuiz(ch1)">Chapter 1 - Computer System</button>
+<button onclick="startQuiz(ch2)">Chapter 2 - Number System</button>
+<button onclick="startQuiz(ch3)">Chapter 3 - Emerging Trends</button>
+
+</div>
+</div>
+
+<!-- QUIZ -->
+<div id="quizScreen" class="screen">
+<div class="timer" id="timer"></div>
 <div class="container" id="quizBox"></div>
+</div>
 
 <script>
 
-const questions=[
-
-{q:"What does CPU stands for?",o:["Central Processing Unit","Central Programming Unit","Computer Personal Unit","Centralized Processing Unit"],a:0},
-{q:"Which is the high speed memory placed between CPU and main memory?",o:["Cache Memory","Secondary Memory","RAM","ROM"],a:0},
-{q:"Which is the volatile temporary memory?",o:["ROM","RAM","SSD","HDD"],a:1},
-{q:"Who is the'Father of Computer'?",o:["William Shakespeare","Isaac Newton","Charles Babbage","None"],a:2},
-{q:"What is the role of Memory Controller?",o:["Manage storage devices","Control CPU speed","Regulate power","Manage data flow of main memory"],a:3},
-{q:"What is bus in computer system?",o:["Software","Physical wire for transfer","Storage device","Processor"],a:1},
-{q:"Which is the first computing device?",o:["Pascaline","Analytical Engine","EDVAC","Abacus"],a:3},
-{q:"Which is the secondary storage example?",o:["RAM","HDD","Cache","Registers"],a:1},
-{q:"What technology replaced Vacuum Tubes?",o:["Transistors","Microprocessor","IC","Punch Cards"],a:0},
-{q:"Key feature of secondary memory?",o:["High speed","Non-volatile","Small storage","Expensive"],a:1},
-{q:"What transfers data between components?",o:["Address Bus","Control Bus","Data Bus","System Bus"],a:2},
-{q:"Specifies memory address?",o:["Control Bus","Address Bus","System Bus","Data Bus"],a:1},
-{q:"Microprocessor?",o:["CPU on chip","Secondary memory","Intel device","Cache"],a:0},
-{q:"IC introduced in?",o:["First","Second","Third","Fourth"],a:3},
-{q:"Fifth generation processor?",o:["Intel 8080","Motorola 6800","Intel 80368","Pentium"],a:3},
-{q:"Core functionality software?",o:["System Software","Application","Utility","Open Source"],a:0},
-{q:"Word processors belong to?",o:["System","Custom","General Purpose","Embedded"],a:2},
-{q:"FOSS example?",o:["Photoshop","MS Word","Mozilla Firefox","CorelDRAW"],a:2},
-{q:"OS primary function?",o:["Manage hardware/software","Security","Develop software","Graphics"],a:0},
-{q:"Not an OS?",o:["Windows","Linux","Android","Photoshop"],a:3},
-{q:"Multitasking?",o:["Graphics","Install software","Run multiple apps","None"],a:2},
-{q:"Analytical Engine purpose?",o:["Arithmetic calculation","Store cards","Industrial control","None"],a:0},
-{q:"USB to HDD transfer device?",o:["Bus","Processor","Memory Controller","Cache"],a:2},
-{q:"32-bit generation?",o:["Fourth","First","Second","Third"],a:0},
-{q:"Manages main memory flow?",o:["Memory Controller","CPU","Cache","Bus"],a:0},
-{q:"Customized software example?",o:["School software","Browser","Media player","Word"],a:0},
-{q:"Computer cannot work without?",o:["System Software","Application","Utility","None"],a:0},
-{q:"Tabulating machine inventor?",o:["Alan Turing","Babbage","Pascal","Herman Hollerith"],a:3},
-{q:"ROM stands for?",o:["Remote Manager","Random Memory","Read Only Memory","Run Time"],a:2},
-{q:"Application software function?",o:["User tasks","Manage hardware","Core system","Security"],a:0}
-
-];
-
+let questions=[];
 let index=0;
 let score=0;
 let answers=[];
+let timerInterval;
+
+/* ---------- CHAPTER 1 ---------- */
+const ch1=[
+{q:"CPU stands for?",o:["Central Processing Unit","Central Programming Unit","Computer Personal Unit","Centralized Processing Unit"],a:0},
+{q:"High speed memory between CPU and main memory?",o:["Cache Memory","Secondary Memory","RAM","ROM"],a:0},
+{q:"Volatile temporary memory?",o:["ROM","RAM","SSD","HDD"],a:1},
+{q:"Father of Computer?",o:["William Shakespeare","Isaac Newton","Charles Babbage","None"],a:2},
+{q:"Primary role of Memory Controller?",o:["Manage storage","Control CPU","Regulate power","Manage data flow"],a:3}
+];
+
+/* ---------- CHAPTER 2 ---------- */
+const ch2=[
+{q:"Number system using two symbols?",o:["Decimal","Binary","Octal","Hexadecimal"],a:1},
+{q:"Radix of Octal system?",o:["2","8","10","16"],a:1},
+{q:"Bits in one byte?",o:["4","8","16","32"],a:1},
+{q:"ASCII uses?",o:["6 bits","7 bits","8 bits","16 bits"],a:1},
+{q:"Hexadecimal digit F value?",o:["14","15","16","13"],a:1}
+];
+
+/* ---------- CHAPTER 3 ---------- */
+const ch3=[
+{q:"AI refers to?",o:["Human intelligence","Machine intelligence","Natural intelligence","Manual processing"],a:1},
+{q:"Example of AI?",o:["Calculator","Voice Assistant","Keyboard","Printer"],a:1},
+{q:"Machine Learning is subset of?",o:["Internet","Artificial Intelligence","Cloud","Robotics"],a:1},
+{q:"IoT stands for?",o:["Internet of Technology","Integration of Things","Internet of Things","Interface of Things"],a:2},
+{q:"Cloud Computing allows users to?",o:["Store locally","Access via Internet","Use hardware only","Disconnect network"],a:1}
+];
+
+function startQuiz(chapter){
+
+questions=chapter;
+index=0;
+score=0;
+answers=[];
+
+document.getElementById("home").classList.remove("active");
+document.getElementById("quizScreen").classList.add("active");
+
+startTimer();
+loadQuestion();
+}
 
 function loadQuestion(){
 
@@ -128,39 +153,44 @@ loadQuestion();
 
 function showResult(){
 
-let review="<h2>Result</h2>";
-review+=`<h3>Your Score: ${score}/30</h3>`;
+clearInterval(timerInterval);
+
+let review=`<h2>Result</h2>
+<h3>Score: ${score}/${questions.length}</h3>`;
 
 questions.forEach((q,i)=>{
-let correct=q.a;
-let user=answers[i];
-
-review+=`<p>
+review+=`
+<p>
 Q${i+1}: ${q.q}<br>
-Your Answer: ${q.o[user]||"Not Answered"}<br>
-Correct Answer: ${q.o[correct]}
-${user===correct?" ✅":" ❌"}
+Your Answer: ${q.o[answers[i]]||"Not Answered"}<br>
+Correct: ${q.o[q.a]}
+${answers[i]==q.a?" ✅":" ❌"}
 </p><hr>`;
 });
+
+review+=`<button onclick="location.reload()">Back to Home</button>`;
 
 document.getElementById("quizBox").innerHTML=review;
 }
 
+function startTimer(){
+
 let time=2400;
 
-setInterval(()=>{
-let min=Math.floor(time/60);
-let sec=time%60;
+timerInterval=setInterval(()=>{
+let m=Math.floor(time/60);
+let s=time%60;
+
 document.getElementById("timer").innerText=
-`Time Left: ${min}:${sec<10?"0":""}${sec}`;
+"Time Left: "+m+":"+(s<10?"0":"")+s;
+
 time--;
 
 if(time<0){
 showResult();
 }
 },1000);
-
-loadQuestion();
+}
 
 </script>
 
