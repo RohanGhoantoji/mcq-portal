@@ -32,12 +32,12 @@ box-shadow:0 0 10px rgba(0,0,0,0.2);
 
 button{
 padding:10px 20px;
-margin:10px;
+margin:6px;
 font-size:16px;
 cursor:pointer;
+border:none;
 background:#1f3c88;
 color:white;
-border:none;
 border-radius:5px;
 }
 
@@ -63,6 +63,10 @@ font-size:18px;
 margin-bottom:10px;
 }
 
+.review{
+text-align:left;
+}
+
 </style>
 </head>
 
@@ -70,7 +74,26 @@ margin-bottom:10px;
 
 <header>1st PUC Computer Science MCQ Portal</header>
 
-<div class="container" id="quiz">
+<div class="container" id="home">
+
+<h2>Select Chapter</h2>
+
+<button onclick="startChapter(1)">Chapter 1</button>
+<button onclick="startChapter(2)">Chapter 2</button>
+<button onclick="startChapter(3)">Chapter 3</button>
+<button onclick="startChapter(4)">Chapter 4</button>
+<button onclick="startChapter(5)">Chapter 5</button>
+<button onclick="startChapter(6)">Chapter 6</button>
+<button onclick="startChapter(7)">Chapter 7</button>
+<button onclick="startChapter(8)">Chapter 8</button>
+<button onclick="startChapter(9)">Chapter 9</button>
+<button onclick="startChapter(10)">Chapter 10</button>
+<button onclick="startChapter(11)">Chapter 11</button>
+
+</div>
+
+
+<div class="container" id="quiz" style="display:none">
 
 <div class="timer" id="timer"></div>
 
@@ -88,89 +111,140 @@ margin-bottom:10px;
 <h2>Quiz Completed</h2>
 
 <p id="score"></p>
-<p id="timeTaken"></p>
 
-<button onclick="location.reload()">Restart</button>
+<h3>Review</h3>
+
+<div class="review" id="review"></div>
+
+<button onclick="location.reload()">Home</button>
 
 </div>
 
 
 <script>
 
-let questions=[
+let questions={
 
-{q:"Who is known as father of computer?",o:["Charles Babbage","Alan Turing","Bill Gates","Steve Jobs"],a:0},
-{q:"CPU stands for?",o:["Central Processing Unit","Control Program Unit","Central Program Utility","Computer Power Unit"],a:0},
-{q:"Which is an input device?",o:["Monitor","Keyboard","Printer","Speaker"],a:1},
-{q:"Which memory is temporary?",o:["ROM","RAM","Hard disk","DVD"],a:1},
-{q:"Binary number system base is?",o:["2","8","10","16"],a:0},
-{q:"Decimal number system base is?",o:["2","8","10","16"],a:2},
-{q:"ASCII is used for?",o:["Character encoding","Networking","Operating system","Programming"],a:0},
-{q:"AI stands for?",o:["Artificial Intelligence","Advanced Internet","Automatic Input","Artificial Interface"],a:0},
-{q:"IoT stands for?",o:["Internet of Things","Input of Technology","Internet of Technology","Interface of Things"],a:0},
-{q:"Cloud computing stores data?",o:["Internet servers","Hard disk","USB","DVD"],a:0},
-{q:"Algorithm means?",o:["Step-by-step solution","Programming language","Computer hardware","Memory unit"],a:0},
-{q:"Flowchart uses?",o:["Symbols","Numbers","Words","Pictures"],a:0},
+1:[
+{q:"Father of computer?",o:["Charles Babbage","Bill Gates","Steve Jobs","Alan Turing"],a:0},
+{q:"CPU stands for?",o:["Central Processing Unit","Control Processing Unit","Computer Program Unit","Central Program Utility"],a:0},
+{q:"Which is input device?",o:["Keyboard","Printer","Monitor","Speaker"],a:0},
+{q:"Which is output device?",o:["Printer","Mouse","Keyboard","Scanner"],a:0},
+{q:"RAM is?",o:["Temporary memory","Permanent memory","Secondary memory","External memory"],a:0}
+],
+
+2:[
+{q:"Binary base?",o:["2","8","10","16"],a:0},
+{q:"Decimal base?",o:["10","2","8","16"],a:0},
+{q:"Hexadecimal base?",o:["16","8","10","2"],a:0},
+{q:"Binary of 5?",o:["101","100","111","110"],a:0},
+{q:"ASCII is?",o:["Character code","Memory","Device","Program"],a:0}
+],
+
+3:[
+{q:"AI stands for?",o:["Artificial Intelligence","Advanced Internet","Automatic Interface","Artificial Internet"],a:0},
+{q:"IoT stands for?",o:["Internet of Things","Input of Technology","Interface of Things","Internet of Technology"],a:0},
+{q:"Cloud computing stores data on?",o:["Internet","Hard disk","USB","DVD"],a:0},
+{q:"Big data means?",o:["Large data sets","Small data","Binary data","Computer data"],a:0},
+{q:"AI used in?",o:["Robots","Keyboard","Printer","Mouse"],a:0}
+],
+
+4:[
+{q:"Algorithm is?",o:["Step by step solution","Program","Memory","Device"],a:0},
+{q:"Flowchart uses?",o:["Symbols","Numbers","Codes","Letters"],a:0},
+{q:"Oval symbol means?",o:["Start/Stop","Process","Input","Decision"],a:0},
+{q:"Rectangle means?",o:["Process","Start","Stop","Decision"],a:0},
+{q:"Flowchart helps in?",o:["Problem solving","Typing","Printing","Storage"],a:0}
+],
+
+5:[
 {q:"Python is?",o:["Programming language","Operating system","Database","Browser"],a:0},
-{q:"Comment symbol in Python?",o:["#","//","--","**"],a:0},
-{q:"Loop used when condition true?",o:["while","switch","case","goto"],a:0},
-{q:"Function defined using?",o:["def","fun","define","function"],a:0},
-{q:"String stores?",o:["Characters","Numbers","Images","Videos"],a:0},
-{q:"List symbol?",o:["[]","()","{}","<>"],a:0},
-{q:"Tuple symbol?",o:["()","[]","{}","<>"],a:0},
-{q:"Dictionary uses?",o:["Key value pairs","Numbers","Characters","Images"],a:0},
-{q:"Digital footprint means?",o:["Online trace","Computer memory","Software","Hardware"],a:0},
-{q:"Unauthorized access is?",o:["Hacking","Programming","Formatting","Scanning"],a:0},
-{q:"Which is output device?",o:["Printer","Keyboard","Mouse","Scanner"],a:0},
-{q:"Which generation used vacuum tubes?",o:["First","Second","Third","Fourth"],a:0},
-{q:"Hexadecimal base?",o:["16","10","8","2"],a:0},
-{q:"Binary of 5?",o:["101","110","111","100"],a:0},
-{q:"Which is storage device?",o:["Hard disk","Keyboard","Mouse","Monitor"],a:0},
-{q:"Python file extension?",o:[".py",".java",".cpp",".html"],a:0},
-{q:"for loop used for?",o:["Iteration","Condition","Storage","Input"],a:0},
-{q:"Cybercrime means?",o:["Crime using computer","Programming","Typing","Browsing"],a:0}
+{q:"Comment symbol?",o:["#","//","--","**"],a:0},
+{q:"Variable stores?",o:["Data","Program","Device","File"],a:0},
+{q:"Python file extension?",o:[".py",".java",".cpp",".txt"],a:0},
+{q:"print() is?",o:["Function","Loop","Variable","Class"],a:0}
+],
 
+6:[
+{q:"if statement used for?",o:["Decision","Loop","Storage","Input"],a:0},
+{q:"Loop repeats?",o:["Statements","Memory","Program","Device"],a:0},
+{q:"while loop runs while?",o:["Condition true","Condition false","Always","Never"],a:0},
+{q:"for loop used for?",o:["Iteration","Storage","Input","Output"],a:0},
+{q:"Control statements control?",o:["Flow of program","Memory","CPU","Keyboard"],a:0}
+],
+
+7:[
+{q:"Function defined using?",o:["def","fun","define","function"],a:0},
+{q:"Function is?",o:["Block of code","Memory","Variable","Device"],a:0},
+{q:"Function helps?",o:["Reuse code","Delete code","Store code","Print code"],a:0},
+{q:"Function call means?",o:["Executing function","Deleting function","Saving function","Stopping function"],a:0},
+{q:"Parameter means?",o:["Input to function","Output","Variable","Loop"],a:0}
+],
+
+8:[
+{q:"String stores?",o:["Text","Numbers","Images","Files"],a:0},
+{q:"String written in?",o:["Quotes","Brackets","Braces","Parenthesis"],a:0},
+{q:"len() gives?",o:["Length","Value","Index","Type"],a:0},
+{q:"Uppercase function?",o:["upper()","len()","print()","type()"],a:0},
+{q:"Lowercase function?",o:["lower()","upper()","print()","len()"],a:0}
+],
+
+9:[
+{q:"List uses?",o:["[]","()","{}","<>"],a:0},
+{q:"List stores?",o:["Multiple values","Single value","Only text","Only numbers"],a:0},
+{q:"append() means?",o:["Add element","Remove element","Sort element","Print element"],a:0},
+{q:"List index starts from?",o:["0","1","2","-1"],a:0},
+{q:"List is?",o:["Ordered collection","Memory","Device","File"],a:0}
+],
+
+10:[
+{q:"Tuple uses?",o:["()","[]","{}","<>"],a:0},
+{q:"Tuple is?",o:["Immutable","Mutable","Variable","Loop"],a:0},
+{q:"Dictionary uses?",o:["{}","[]","()","<>"],a:0},
+{q:"Dictionary stores?",o:["Key value pairs","Numbers","Characters","Files"],a:0},
+{q:"Key must be?",o:["Unique","Duplicate","List","Tuple"],a:0}
+],
+
+11:[
+{q:"Cybercrime means?",o:["Crime using computer","Programming","Typing","Gaming"],a:0},
+{q:"Digital footprint?",o:["Online trace","Memory","Software","Hardware"],a:0},
+{q:"Data privacy means?",o:["Protecting personal data","Deleting data","Saving data","Sharing data"],a:0},
+{q:"Ethical use means?",o:["Using technology responsibly","Hacking","Spamming","Piracy"],a:0},
+{q:"Health issue from computers?",o:["Eye strain","Better vision","Strong muscles","Good sleep"],a:0}
 ]
 
+};
+
+let chapterQuestions=[]
 let current=0
 let score=0
 let selected=null
-let time=1800
-let totalTime=1800
+let answers=[]
 
-let timer=setInterval(()=>{
+function startChapter(ch){
 
-time--
+chapterQuestions=questions[ch]
 
-let min=Math.floor(time/60)
-let sec=time%60
+document.getElementById("home").style.display="none"
+document.getElementById("quiz").style.display="block"
 
-document.getElementById("timer").innerText="Time Left: "+min+":"+sec
+showQuestion()
 
-if(time<=0){
-finishQuiz()
 }
-
-},1000)
-
 
 function showQuestion(){
 
-let q=questions[current]
+let q=chapterQuestions[current]
 
 document.getElementById("question").innerText=(current+1)+". "+q.q
 
 let html=""
 
 q.o.forEach((opt,i)=>{
-
 html+=`<div class="option" onclick="selectOption(${i},this)">${opt}</div>`
-
 })
 
 document.getElementById("options").innerHTML=html
-
-selected=null
 
 }
 
@@ -186,13 +260,15 @@ el.classList.add("selected")
 
 function nextQuestion(){
 
-if(selected===questions[current].a){
+answers.push(selected)
+
+if(selected===chapterQuestions[current].a){
 score++
 }
 
 current++
 
-if(current>=questions.length){
+if(current>=chapterQuestions.length){
 finishQuiz()
 }else{
 showQuestion()
@@ -202,20 +278,23 @@ showQuestion()
 
 function finishQuiz(){
 
-clearInterval(timer)
-
 document.getElementById("quiz").style.display="none"
 document.getElementById("result").style.display="block"
 
-document.getElementById("score").innerText="Score: "+score+" / "+questions.length
+document.getElementById("score").innerText="Score: "+score+" / "+chapterQuestions.length
 
-let timeUsed=totalTime-time
+let reviewHTML=""
 
-document.getElementById("timeTaken").innerText="Time Taken: "+timeUsed+" seconds"
+chapterQuestions.forEach((q,i)=>{
+
+reviewHTML+="<p><b>"+(i+1)+". "+q.q+"</b><br>"
+reviewHTML+="Correct: "+q.o[q.a]+"</p><hr>"
+
+})
+
+document.getElementById("review").innerHTML=reviewHTML
 
 }
-
-showQuestion()
 
 </script>
 
