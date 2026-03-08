@@ -1,197 +1,308 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>MCQ Portal</title>
+<meta charset="UTF-8">
+<title>1st PUC Computer Science MCQ Portal</title>
 
 <style>
 body{
-font-family:Arial;
-background:#0f172a;
-color:white;
-text-align:center;
+font-family:Arial, sans-serif;
+background:#eef2f7;
 margin:0;
+text-align:center;
+}
+
+header{
+background:#1f3c88;
+color:white;
+padding:15px;
+font-size:24px;
 }
 
 .container{
-max-width:700px;
+width:70%;
 margin:auto;
-padding:20px;
+margin-top:30px;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
 
 button{
-padding:12px 20px;
-margin:10px;
+padding:10px 18px;
+margin:6px;
 font-size:16px;
-border:none;
-border-radius:8px;
 cursor:pointer;
-background:#22c55e;
+border:none;
+background:#1f3c88;
 color:white;
+border-radius:5px;
+}
+
+button:hover{
+background:#162c63;
 }
 
 .option{
 display:block;
-background:#1e293b;
-margin:10px;
-padding:12px;
-border-radius:8px;
+background:#f0f0f0;
+margin:8px;
+padding:10px;
+border-radius:6px;
 cursor:pointer;
 }
 
-.timer{
-font-size:20px;
-color:#facc15;
+.option:hover{
+background:#dce4ff;
 }
 
-.hidden{
-display:none;
+.timer{
+font-size:18px;
+color:red;
+margin-bottom:10px;
+}
+
+.review{
+text-align:left;
+margin-top:20px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<header>1st PUC Computer Science MCQ Portal</header>
 
-<h1>📘 MCQ Learning Portal</h1>
-
-<div id="home">
+<div class="container" id="home">
 <h2>Select Chapter</h2>
 
-<button onclick="startQuiz(1)">
-Encoding Schemes & Number System
-</button>
+<button onclick="startChapter(1,1200)">Chapter 1</button>
+<button onclick="startChapter(2,900)">Chapter 2</button>
+<button onclick="startChapter(3,600)">Chapter 3</button>
+<button onclick="startChapter(4,600)">Chapter 4</button>
+<button onclick="startChapter(5,900)">Chapter 5</button>
+<button onclick="startChapter(6,900)">Chapter 6</button>
+<button onclick="startChapter(7,900)">Chapter 7</button>
+<button onclick="startChapter(8,900)">Chapter 8</button>
+<button onclick="startChapter(9,900)">Chapter 9</button>
+<button onclick="startChapter(10,900)">Chapter 10</button>
+<button onclick="startChapter(11,600)">Chapter 11</button>
 
-<button onclick="startQuiz(2)">
-Emerging Trends
-</button>
 </div>
 
-<div id="quiz" class="hidden">
+
+<div class="container" id="quiz" style="display:none">
+
 <div class="timer" id="timer"></div>
-<h2 id="question"></h2>
+
+<h3 id="question"></h3>
+
 <div id="options"></div>
-<button onclick="nextQuestion()">Submit</button>
+
+<button onclick="nextQuestion()">Next</button>
+
 </div>
 
-<div id="result" class="hidden">
-<h2>✅ Quiz Completed</h2>
+
+<div class="container" id="result" style="display:none">
+
+<h2>Quiz Finished</h2>
+
 <p id="score"></p>
 <p id="timeTaken"></p>
-<button onclick="location.reload()">Home</button>
-</div>
+
+<h3>Review Answers</h3>
+<div class="review" id="review"></div>
+
+<button onclick="location.reload()">Back to Home</button>
 
 </div>
+
 
 <script>
 
-let questions=[];
-let index=0;
-let score=0;
-let selected=null;
-let startTime;
-let timerInterval;
+let questions = {
 
-const chapter1=[
-{q:"Which number system uses only two symbols?",o:["Decimal","Binary","Octal","Hexadecimal"],a:1},
-{q:"Radix of Octal system?",o:["2","8","10","16"],a:1},
-{q:"Decimal of (11010)₂ ?",o:["24","25","26","27"],a:2},
-{q:"Binary of 45?",o:["101101","110101","100101","111001"],a:0},
-{q:"Bits in one byte?",o:["4","8","16","32"],a:1}
-];
+1:[
+{q:"Who is known as the father of computer?",o:["Charles Babbage","Alan Turing","Bill Gates","John Von Neumann"],a:0},
+{q:"The physical parts of a computer are called:",o:["Software","Hardware","Firmware","Utilities"],a:1},
+{q:"Which generation used vacuum tubes?",o:["First","Second","Third","Fourth"],a:0},
+{q:"Which device is used to enter data?",o:["Monitor","Printer","Keyboard","Speaker"],a:2},
+{q:"CPU stands for:",o:["Central Processing Unit","Computer Processing Unit","Central Programming Unit","Control Processing Unit"],a:0},
+{q:"Which is a storage device?",o:["Keyboard","Mouse","Hard disk","Monitor"],a:2},
+{q:"RAM is:",o:["Permanent memory","Temporary memory","Secondary memory","Optical memory"],a:1},
+{q:"Which is an output device?",o:["Printer","Keyboard","Scanner","Joystick"],a:0},
+{q:"Microprocessors belong to which generation?",o:["Second","Third","Fourth","Fifth"],a:2},
+{q:"Which is not a type of computer?",o:["Analog","Digital","Hybrid","Manual"],a:3}
+],
 
-const chapter2=[
-{q:"AI refers to?",o:["Human intelligence","Machine intelligence","Natural intelligence","Manual processing"],a:1},
-{q:"Example of AI?",o:["Calculator","Voice Assistant","Keyboard","Printer"],a:1},
-{q:"IoT stands for?",o:["Internet Technology","Internet of Things","Integration Things","Interface Things"],a:1},
-{q:"VR means?",o:["Visual Reality","Virtual Reality","Verified Reality","Variable Reality"],a:1},
-{q:"Cloud computing allows?",o:["Local storage","Internet access resources","Hardware only","Disconnect networks"],a:1}
-];
+2:[
+{q:"Binary number system base is:",o:["2","8","10","16"],a:0},
+{q:"Decimal number system base is:",o:["2","8","10","16"],a:2},
+{q:"Hexadecimal digits include:",o:["0–7","0–9","0–9 and A–F","A–Z"],a:2},
+{q:"Which code represents characters?",o:["ASCII","BCD","EBCDIC","Unicode"],a:0},
+{q:"Binary equivalent of decimal 5:",o:["101","111","100","110"],a:0}
+],
 
-function startQuiz(ch){
-document.getElementById("home").classList.add("hidden");
-document.getElementById("quiz").classList.remove("hidden");
+3:[
+{q:"AI stands for:",o:["Artificial Intelligence","Automatic Internet","Advanced Interface","Artificial Internet"],a:0},
+{q:"IoT stands for:",o:["Internet of Things","Input of Technology","Interface of Things","Internet of Technology"],a:0},
+{q:"Cloud computing means:",o:["Storing data on internet servers","Weather computing","Using local storage","Offline computing"],a:0}
+],
 
-questions = ch===1 ? chapter1 : chapter2;
+4:[
+{q:"Step-by-step solution is called:",o:["Algorithm","Program","Flowchart","Loop"],a:0},
+{q:"Flowcharts use:",o:["Symbols","Numbers","Codes","Letters"],a:0},
+{q:"Oval symbol represents:",o:["Process","Start/Stop","Input","Decision"],a:1}
+],
 
-startTime=new Date();
+5:[
+{q:"Python is a:",o:["Programming language","Operating system","Browser","Database"],a:0},
+{q:"Symbol for comments:",o:["#","//","/*","--"],a:0},
+{q:"Keyword to define function:",o:["func","define","def","function"],a:2}
+],
 
-timerInterval=setInterval(updateTimer,1000);
+6:[
+{q:"Which loop repeats while condition true?",o:["for","while","switch","case"],a:1}
+],
 
-loadQuestion();
+7:[
+{q:"Function is defined using:",o:["def","fun","define","function"],a:0}
+],
+
+8:[
+{q:"Strings store:",o:["Numbers","Characters","Images","Files"],a:1}
+],
+
+9:[
+{q:"Lists are written using:",o:["()","[]","{}","<>"],a:1}
+],
+
+10:[
+{q:"Tuples are written using:",o:["()","[]","{}","<>"],a:0}
+],
+
+11:[
+{q:"Unauthorized access to computer is:",o:["Hacking","Programming","Processing","Formatting"],a:0},
+{q:"Digital footprint means:",o:["Online trace of user","Computer memory","Software program","Virus"],a:0}
+]
+
+};
+
+
+let chapterQuestions=[]
+let current=0
+let score=0
+let selected=null
+let time=0
+let totalTime=0
+let timerInterval
+let answers=[]
+
+
+function startChapter(chapter,t){
+
+chapterQuestions=questions[chapter]
+time=t
+totalTime=t
+
+document.getElementById("home").style.display="none"
+document.getElementById("quiz").style.display="block"
+
+startTimer()
+showQuestion()
+
 }
 
-function updateTimer(){
-let now=new Date();
-let diff=2400-Math.floor((now-startTime)/1000);
 
-let m=Math.floor(diff/60);
-let s=diff%60;
+function startTimer(){
 
-document.getElementById("timer").innerText=
-"Time Left: "+m+":"+s;
+timerInterval=setInterval(()=>{
 
-if(diff<=0) finishQuiz();
+time--
+
+let min=Math.floor(time/60)
+let sec=time%60
+
+document.getElementById("timer").innerText="Time Left: "+min+":"+sec
+
+if(time<=0){
+finishQuiz()
 }
 
-function loadQuestion(){
-selected=null;
-let q=questions[index];
-document.getElementById("question").innerText=
-(index+1)+". "+q.q;
+},1000)
 
-let optHTML="";
+}
+
+
+function showQuestion(){
+
+let q=chapterQuestions[current]
+
+document.getElementById("question").innerText=(current+1)+". "+q.q
+
+let html=""
+
 q.o.forEach((opt,i)=>{
-optHTML+=
-`<div class="option"
-onclick="selectOption(${i},this)">
-${opt}
-</div>`;
-});
+html+=`<div class="option" onclick="selectOption(${i})">${opt}</div>`
+})
 
-document.getElementById("options").innerHTML=optHTML;
+document.getElementById("options").innerHTML=html
+
+selected=null
+
 }
 
-function selectOption(i,el){
-selected=i;
-document.querySelectorAll(".option")
-.forEach(o=>o.style.background="#1e293b");
 
-el.style.background="#22c55e";
+function selectOption(i){
+selected=i
 }
+
 
 function nextQuestion(){
 
-if(selected===questions[index].a)
-score++;
+answers.push(selected)
 
-index++;
-
-if(index<questions.length)
-loadQuestion();
-else
-finishQuiz();
+if(selected===chapterQuestions[current].a){
+score++
 }
+
+current++
+
+if(current>=chapterQuestions.length){
+finishQuiz()
+}else{
+showQuestion()
+}
+
+}
+
 
 function finishQuiz(){
 
-clearInterval(timerInterval);
+clearInterval(timerInterval)
 
-document.getElementById("quiz")
-.classList.add("hidden");
+document.getElementById("quiz").style.display="none"
+document.getElementById("result").style.display="block"
 
-document.getElementById("result")
-.classList.remove("hidden");
+let timeUsed=totalTime-time
 
-let end=new Date();
-let time=Math.floor((end-startTime)/1000);
+document.getElementById("score").innerText="Score: "+score+" / "+chapterQuestions.length
+document.getElementById("timeTaken").innerText="Time Taken: "+timeUsed+" seconds"
 
-document.getElementById("score")
-.innerText="Score: "+score+
-" / "+questions.length;
+let reviewHTML=""
 
-document.getElementById("timeTaken")
-.innerText="Time Taken: "+time+" seconds";
+chapterQuestions.forEach((q,i)=>{
+
+reviewHTML+="<p><b>"+(i+1)+". "+q.q+"</b><br>"
+reviewHTML+="Correct: "+q.o[q.a]+"<br>"
+reviewHTML+="Your Answer: "+(answers[i]!=null?q.o[answers[i]]:"Not Answered")+"</p><hr>"
+
+})
+
+document.getElementById("review").innerHTML=reviewHTML
+
 }
 
 </script>
