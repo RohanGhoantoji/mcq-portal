@@ -4,18 +4,19 @@
 <title>PUC Computer Science MCQ Portal</title>
 
 <style>
+
 body{
 font-family:Arial;
+background:#f4f4f4;
 text-align:center;
-background:#f2f2f2;
 }
 
 .container{
-width:60%;
+width:70%;
 margin:auto;
 background:white;
 padding:20px;
-margin-top:50px;
+margin-top:40px;
 border-radius:10px;
 box-shadow:0 0 10px gray;
 }
@@ -29,8 +30,8 @@ cursor:pointer;
 
 .option{
 display:block;
-margin:10px;
 padding:10px;
+margin:10px;
 background:#eee;
 border-radius:5px;
 cursor:pointer;
@@ -44,6 +45,7 @@ display:none;
 font-size:20px;
 color:red;
 }
+
 </style>
 
 </head>
@@ -58,19 +60,27 @@ color:red;
 
 <h2>Select Chapter</h2>
 
-<button onclick="startQuiz('ch1')">Chapter 1: Computer System</button>
-
-<button onclick="startQuiz('ch2')">Chapter 2: Number System</button>
+<button onclick="startQuiz(1)">Chapter 1</button>
+<button onclick="startQuiz(2)">Chapter 2</button>
+<button onclick="startQuiz(3)">Chapter 3</button>
+<button onclick="startQuiz(4)">Chapter 4</button>
+<button onclick="startQuiz(5)">Chapter 5</button>
+<button onclick="startQuiz(6)">Chapter 6</button>
+<button onclick="startQuiz(7)">Chapter 7</button>
+<button onclick="startQuiz(8)">Chapter 8</button>
+<button onclick="startQuiz(9)">Chapter 9</button>
+<button onclick="startQuiz(10)">Chapter 10</button>
+<button onclick="startQuiz(11)">Chapter 11</button>
 
 </div>
 
 <div id="quiz" class="hidden">
 
-<h3 id="chapterTitle"></h3>
+<h2 id="chapterTitle"></h2>
 
 <div id="timer"></div>
 
-<h2 id="question"></h2>
+<h3 id="question"></h3>
 
 <div id="options"></div>
 
@@ -80,7 +90,7 @@ color:red;
 
 <div id="result" class="hidden">
 
-<h2>Quiz Finished</h2>
+<h2>Quiz Completed</h2>
 
 <h3 id="score"></h3>
 
@@ -92,140 +102,172 @@ color:red;
 
 <script>
 
-let chapter=""
-let questions=[]
 let current=0
 let score=0
-let time=0
+let questions=[]
+let time=600
 let timer
 
-const ch1=[
-{
-q:"Who is called the father of computer?",
-o:["Charles Babbage","Alan Turing","Bill Gates","Steve Jobs"],
-a:0
-},
-{
-q:"First generation computers used",
-o:["Vacuum tubes","Transistors","IC","Microprocessor"],
-a:0
-},
-{
-q:"Computer is an",
-o:["Electronic device","Mechanical device","Manual device","None"],
-a:0
-},
-{
-q:"CPU stands for",
-o:["Central Processing Unit","Computer Processing Unit","Central Program Unit","None"],
-a:0
-},
-{
-q:"ALU performs",
-o:["Arithmetic and logic","Storage","Input","Output"],
-a:0
-},
-{
-q:"Which is an input device?",
-o:["Keyboard","Monitor","Printer","Speaker"],
-a:0
-},
-{
-q:"Which is an output device?",
-o:["Monitor","Keyboard","Mouse","Scanner"],
-a:0
-},
-{
-q:"Brain of computer",
-o:["CPU","RAM","Hard disk","Monitor"],
-a:0
-},
-{
-q:"Example of storage device",
-o:["Hard disk","Keyboard","Mouse","Monitor"],
-a:0
-},
-{
-q:"Computer works on",
-o:["Input Process Output","Output Input","Process Input","None"],
-a:0
-}
+const data={
+
+1:[
+{q:"Father of computer?",o:["Charles Babbage","Bill Gates","Steve Jobs","Alan Turing"],a:0},
+{q:"Brain of computer?",o:["CPU","RAM","Mouse","Monitor"],a:0},
+{q:"Computer is a",o:["Electronic device","Mechanical device","Manual device","None"],a:0},
+{q:"CPU stands for",o:["Central Processing Unit","Computer Processing Unit","Central Program Unit","None"],a:0},
+{q:"Input device?",o:["Keyboard","Monitor","Printer","Speaker"],a:0},
+{q:"Output device?",o:["Monitor","Mouse","Scanner","Keyboard"],a:0},
+{q:"ALU performs",o:["Arithmetic Logic","Storage","Input","Output"],a:0},
+{q:"Storage device?",o:["Hard disk","Mouse","Keyboard","Monitor"],a:0},
+{q:"IPO stands for",o:["Input Process Output","Input Program Output","Input Print Output","None"],a:0},
+{q:"Computer works on",o:["IPO cycle","OIP cycle","PIO cycle","None"],a:0}
+],
+
+2:[
+{q:"Binary base?",o:["2","8","10","16"],a:0},
+{q:"Decimal base?",o:["10","2","8","16"],a:0},
+{q:"Hexadecimal base?",o:["16","2","10","8"],a:0},
+{q:"Binary digits?",o:["Bits","Bytes","Codes","Data"],a:0},
+{q:"1 Byte =",o:["8 bits","4 bits","16 bits","2 bits"],a:0},
+{q:"Encoding scheme?",o:["ASCII","CPU","RAM","ALU"],a:0},
+{q:"Binary of 2?",o:["10","11","01","00"],a:0},
+{q:"Binary of 5?",o:["101","100","110","111"],a:0},
+{q:"1+1 in binary?",o:["10","11","01","00"],a:0},
+{q:"Decimal digits?",o:["0-9","0-1","1-8","A-F"],a:0}
+],
+
+3:[
+{q:"AI stands for",o:["Artificial Intelligence","Auto Internet","Advanced Input","None"],a:0},
+{q:"IoT means",o:["Internet of Things","Input of Things","Internet Tools","None"],a:0},
+{q:"Cloud computing stores data on",o:["Internet","CPU","Keyboard","Printer"],a:0},
+{q:"Big data means",o:["Large data","Small data","Binary data","None"],a:0},
+{q:"AI example?",o:["Voice assistant","Keyboard","Monitor","Mouse"],a:0},
+{q:"IoT device?",o:["Smart watch","Book","Pen","Table"],a:0},
+{q:"Cloud service example?",o:["Google Drive","CPU","RAM","BIOS"],a:0},
+{q:"AI used in",o:["Robots","Paper","Chair","Book"],a:0},
+{q:"IoT connects devices via",o:["Internet","Cable","Battery","None"],a:0},
+{q:"Big data used in",o:["Data analysis","Typing","Printing","None"],a:0}
+],
+
+4:[
+{q:"Step by step solution?",o:["Algorithm","Program","Flow","None"],a:0},
+{q:"Graphical algorithm?",o:["Flowchart","Diagram","Chart","None"],a:0},
+{q:"Start symbol?",o:["Oval","Square","Circle","Triangle"],a:0},
+{q:"Decision symbol?",o:["Diamond","Square","Circle","Oval"],a:0},
+{q:"Process symbol?",o:["Rectangle","Circle","Oval","Diamond"],a:0},
+{q:"Algorithm step?",o:["Finite","Infinite","Random","None"],a:0},
+{q:"Flowchart shows",o:["Program flow","Data","Storage","None"],a:0},
+{q:"Arrow in flowchart?",o:["Flow line","Connector","Loop","None"],a:0},
+{q:"Flowchart used for",o:["Planning","Typing","Printing","None"],a:0},
+{q:"Algorithm should be",o:["Clear","Complex","Long","None"],a:0}
+],
+
+5:[
+{q:"Python is",o:["Programming language","Hardware","Software tool","None"],a:0},
+{q:"Keyword example?",o:["if","hello","name","value"],a:0},
+{q:"Variable stores",o:["Data","Program","Device","None"],a:0},
+{q:"Identifier name",o:["Variable name","Program","Code","None"],a:0},
+{q:"Operator example?",o:["+","A","Hello","None"],a:0},
+{q:"Python created by",o:["Guido van Rossum","Bill Gates","Jobs","None"],a:0},
+{q:"Python is",o:["High level","Low level","Binary","None"],a:0},
+{q:"Debugging means",o:["Fixing errors","Writing code","Running code","None"],a:0},
+{q:"Python file extension",o:[".py",".java",".cpp",".html"],a:0},
+{q:"Print command",o:["print()","show()","write()","echo()"],a:0}
+],
+
+6:[
+{q:"Decision statement?",o:["if","for","print","None"],a:0},
+{q:"Loop example?",o:["for","print","input","None"],a:0},
+{q:"While loop runs",o:["Until condition false","Once","Never","None"],a:0},
+{q:"If used for",o:["Decision","Loop","Input","None"],a:0},
+{q:"Else works with",o:["if","for","print","None"],a:0},
+{q:"Loop repeats",o:["Statements","Data","Program","None"],a:0},
+{q:"For loop used for",o:["Iteration","Printing","Storage","None"],a:0},
+{q:"Break statement",o:["Stops loop","Runs loop","Repeats","None"],a:0},
+{q:"Continue means",o:["Skip step","Stop","Print","None"],a:0},
+{q:"Indentation means",o:["Spaces","Numbers","Symbols","None"],a:0}
+],
+
+7:[
+{q:"Function is",o:["Reusable code","Loop","Variable","None"],a:0},
+{q:"Function defined by",o:["def","fun","define","None"],a:0},
+{q:"Function call means",o:["Using function","Creating function","Deleting","None"],a:0},
+{q:"Function returns",o:["Value","Loop","Error","None"],a:0},
+{q:"Parameter means",o:["Input","Output","Loop","None"],a:0},
+{q:"Return keyword",o:["return","stop","exit","None"],a:0},
+{q:"Function improves",o:["Code reuse","Errors","Typing","None"],a:0},
+{q:"Function block uses",o:["Indentation","Numbers","Symbols","None"],a:0},
+{q:"Function example",o:["def add()","loop","print","None"],a:0},
+{q:"Function reduces",o:["Code repetition","Output","Memory","None"],a:0}
+],
+
+8:[
+{q:"String means",o:["Text","Number","Loop","None"],a:0},
+{q:"String example",o:["'hello'","5","True","None"],a:0},
+{q:"String index starts",o:["0","1","2","-1"],a:0},
+{q:"String length",o:["len()","count()","size()","None"],a:0},
+{q:"Uppercase method",o:["upper()","high()","big()","None"],a:0},
+{q:"Lowercase method",o:["lower()","small()","down()","None"],a:0},
+{q:"String join uses",o:["+","-","*","/"],a:0},
+{q:"Substring means",o:["Part of string","Full string","Loop","None"],a:0},
+{q:"String is",o:["Immutable","Mutable","Variable","None"],a:0},
+{q:"Traversal means",o:["Reading characters","Deleting","Printing","None"],a:0}
+],
+
+9:[
+{q:"List is",o:["Collection","Loop","Function","None"],a:0},
+{q:"List uses",o:["[]","{}","()","<>"],a:0},
+{q:"Add element",o:["append()","add()","push()","None"],a:0},
+{q:"Remove element",o:["remove()","delete()","popall()","None"],a:0},
+{q:"List index starts",o:["0","1","2","-1"],a:0},
+{q:"List can store",o:["Multiple items","One item","No item","None"],a:0},
+{q:"List is",o:["Mutable","Immutable","Constant","None"],a:0},
+{q:"List length",o:["len()","count()","size()","None"],a:0},
+{q:"Traverse list",o:["Loop","Print","Input","None"],a:0},
+{q:"Example list",o:["[1,2,3]","(1,2,3)","{1,2,3}","None"],a:0}
+],
+
+10:[
+{q:"Tuple uses",o:["()","[]","{}","<>"],a:0},
+{q:"Tuple is",o:["Immutable","Mutable","Variable","None"],a:0},
+{q:"Dictionary uses",o:["{}","[]","()","<>"],a:0},
+{q:"Dictionary stores",o:["Key value","Numbers","Loop","None"],a:0},
+{q:"Key must be",o:["Unique","Duplicate","None","All"],a:0},
+{q:"Dictionary example",o:["{'a':1}","[1,2]","(1,2)","None"],a:0},
+{q:"Access value",o:["Key","Index","Loop","None"],a:0},
+{q:"Tuple index",o:["0","1","2","-1"],a:0},
+{q:"Tuple length",o:["len()","size()","count()","None"],a:0},
+{q:"Dictionary method",o:["keys()","print()","run()","None"],a:0}
+],
+
+11:[
+{q:"Digital footprint means",o:["Online trace","Foot step","Hardware","None"],a:0},
+{q:"Data privacy means",o:["Protect data","Delete data","Print data","None"],a:0},
+{q:"Cybercrime example",o:["Hacking","Typing","Printing","None"],a:0},
+{q:"Ethics means",o:["Right conduct","Programming","Loop","None"],a:0},
+{q:"Phishing means",o:["Fake emails","Coding","Typing","None"],a:0},
+{q:"Cyber safety",o:["Secure internet","Fast internet","Free internet","None"],a:0},
+{q:"Strong password",o:["Secure","Weak","Easy","None"],a:0},
+{q:"Health issue",o:["Eye strain","Happiness","Energy","None"],a:0},
+{q:"Data protection",o:["Security","Speed","Input","None"],a:0},
+{q:"Cyber law protects",o:["Users","CPU","RAM","None"],a:0}
 ]
 
-const ch2=[
-{
-q:"Binary number system base is",
-o:["2","8","10","16"],
-a:0
-},
-{
-q:"Decimal number system base",
-o:["10","2","8","16"],
-a:0
-},
-{
-q:"Hexadecimal system base",
-o:["16","2","10","8"],
-a:0
-},
-{
-q:"Binary digits are called",
-o:["Bits","Bytes","Codes","Data"],
-a:0
-},
-{
-q:"1 Byte =",
-o:["8 bits","4 bits","2 bits","16 bits"],
-a:0
-},
-{
-q:"Example of encoding scheme",
-o:["ASCII","CPU","RAM","ALU"],
-a:0
-},
-{
-q:"Binary of decimal 2",
-o:["10","11","01","00"],
-a:0
-},
-{
-q:"Binary of decimal 5",
-o:["101","100","110","111"],
-a:0
-},
-{
-q:"Binary addition 1+1",
-o:["10","11","01","00"],
-a:0
-},
-{
-q:"Decimal number uses digits",
-o:["0-9","0-1","A-F","1-8"],
-a:0
 }
-]
 
 function startQuiz(ch){
 
-chapter=ch
+questions=data[ch]
+current=0
+score=0
+time=600
 
 document.getElementById("home").classList.add("hidden")
 document.getElementById("quiz").classList.remove("hidden")
 
-if(ch=="ch1"){
-questions=ch1
-time=300
-document.getElementById("chapterTitle").innerText="Chapter 1: Computer System"
-}
-
-if(ch=="ch2"){
-questions=ch2
-time=300
-document.getElementById("chapterTitle").innerText="Chapter 2: Number System"
-}
+document.getElementById("chapterTitle").innerText="Chapter "+ch
 
 startTimer()
-
 showQuestion()
 
 }
@@ -234,15 +276,14 @@ function startTimer(){
 
 timer=setInterval(function(){
 
-let min=Math.floor(time/60)
-let sec=time%60
+let m=Math.floor(time/60)
+let s=time%60
 
-document.getElementById("timer").innerText="Time: "+min+":"+sec
+document.getElementById("timer").innerText="Time: "+m+":"+s
 
 time--
 
 if(time<0){
-clearInterval(timer)
 finishQuiz()
 }
 
@@ -256,15 +297,15 @@ let q=questions[current]
 
 document.getElementById("question").innerText=(current+1)+". "+q.q
 
-let optionsHTML=""
+let html=""
 
 q.o.forEach((opt,i)=>{
-optionsHTML+=`<div class="option">
+html+=`<div class="option">
 <input type="radio" name="opt" value="${i}"> ${opt}
 </div>`
 })
 
-document.getElementById("options").innerHTML=optionsHTML
+document.getElementById("options").innerHTML=html
 
 }
 
@@ -273,19 +314,16 @@ function nextQuestion(){
 let selected=document.querySelector('input[name="opt"]:checked')
 
 if(selected){
-
 if(parseInt(selected.value)==questions[current].a){
 score++
 }
-
 }
 
 current++
 
 if(current<questions.length){
 showQuestion()
-}
-else{
+}else{
 finishQuiz()
 }
 
